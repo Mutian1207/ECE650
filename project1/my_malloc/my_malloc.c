@@ -4,24 +4,25 @@
 
 static meta *fhead=NULL;
 static meta *ftail=NULL;
-//static unsigned long totalsize = 0;
-//static unsigned long allocated = 0;
+static unsigned long total_size = 0;
+static unsigned long free_size = 0;
 
-void printfl(){
+void printfl(){                
   meta *cur = fhead;
+  printf("print free list once\n");
   while(cur!=NULL){
-    printf("cur : %p, cur->size: %lu\n",cur,cur->size);
+    printf("cur : %p, cur->size: %zu\n",cur,cur->size);
     cur = cur->next;
   }
+  }
 
-}
+
 //init a new meta
 void set_meta(meta * node, size_t size, meta*prev,meta*next,int isfree){
   node->size = size;
   node->prev = prev;
   node->next = next;
-  node->isfree = isfree;
- 
+  node->isfree = isfree;  
 }
 
 //get current break position
@@ -34,6 +35,7 @@ void * allocate_newmemo(size_t size){
   meta * cur = get_curpos();
   if(sbrk(size+sizeof(meta)) != (void *)-1){
     // create a meta struct
+    total_size+=size+sizeof(meta);
     cur->size =size;
     cur->prev = NULL;
     cur->next = NULL;
@@ -42,12 +44,12 @@ void * allocate_newmemo(size_t size){
   }else{
     return NULL;
   }
-  
 }
 
 //find the approriate free block accommodate for  
 meta * find_freeblock(int first_fit,size_t size){
-  if(fhead==NULL && ftail == fhead) return NULL;
+ 
+  if(fhead==NULL && ftail == NULL) return NULL;
   meta * free_block = NULL;
   meta * cur = fhead;
   //first appropriate free block
@@ -87,18 +89,24 @@ meta * find_freeblock(int first_fit,size_t size){
 //split block to allocate target size
 void * split(meta * block,size_t size){
   assert(block!=NULL);
-
   // post part left (free)
-  meta * new_meta =(meta *) (char *)block + size+ sizeof(meta);
-  set_meta(new_meta,block->size-size-sizeof(meta),block->prev,block->next,1);
-  // insert new meta to freelist
-  add_freeblk(new_meta);
+  meta * new_meta =(meta *)((char *)block + size+ sizeof(meta));
+  size_t left_size = block->size-size;
   remove_freeblock(block);
-  set_meta(block,size,NULL,NULL,0);
+  // if left space size > meta size means we can split and store another space to free list
+
+  if(left_size > sizeof(meta)) {
+    set_meta(new_meta,left_size-sizeof(meta),NULL,NULL,1);
+    add_freeblk(new_meta);
+    //set block change the size
+      set_meta(block,size,NULL,NULL,0);
+  }
+  //else we cannot split so dont change the block just waste some space
   return (char *)block + sizeof(meta);
 }
 // remove a meta from the free list
 void remove_freeblock(meta *freeblock){
+  
   if(fhead==ftail && fhead==freeblock){
     fhead = NULL;
     ftail = NULL;
@@ -114,12 +122,11 @@ void remove_freeblock(meta *freeblock){
     freeblock->prev->next=freeblock->next;
     freeblock->next->prev = freeblock->prev;
   }
-  
 }
 //add a meta to the free list
 void add_freeblk(meta *blk){
   if(fhead==NULL && ftail==NULL){
-    fhead= blk;
+    fhead = blk;
     ftail = blk;
     blk->prev = NULL;
     blk->next = NULL;
@@ -134,7 +141,6 @@ void add_freeblk(meta *blk){
       if(cur<blk) cur = cur->next;
       else break;
     }
-    
      cur->prev->next = blk;
      blk->prev = cur->prev;
      blk->next = cur;
@@ -144,25 +150,24 @@ void add_freeblk(meta *blk){
     blk->prev = ftail;
     blk->next =NULL;
     ftail = blk;
-  }
-  
+  }  
 }
 // merge two free blocks
 void merge(meta*blk){
-  if(blk->prev!=NULL){
-    if((char*) blk == (char*) blk->prev + blk->prev->size+sizeof(meta)){
-      blk->prev->size +=blk->size+sizeof(meta);
-      blk->next->prev = blk->prev;
-      blk->prev->next = blk->next;
-      blk = blk->prev;
-    } 
-  }
   if(blk->next!=NULL){
-    if((char*) blk->next == (char*)blk+blk->size+sizeof(meta)){
-      blk->size+=blk->next->size;
-      blk->next = blk->next->next;
-      blk->next->prev = blk;
-   }
+    if((char*)blk + sizeof(meta) + blk->size == (char*) blk->next){
+      blk->size += sizeof(meta);
+      blk->size += blk->next->size;
+      remove_freeblock(blk->next);
+    }
+  }
+  if(blk->prev!=NULL){
+    if((char*)blk->prev+sizeof(meta) +blk->prev->size == (char*) blk){
+      blk->prev->size += sizeof(meta);
+      blk->prev->size += blk->size;
+      remove_freeblock(blk);
+    }
+
   }
   
 }
@@ -173,13 +178,16 @@ void * _malloc(int first_fit,size_t size){
  
   //find an appropriate free block
   meta * free_block = find_freeblock(first_fit,size);
-  
   //if found then use that block to split -> prev part for contain / post part still free
+  //  printf("malloc function\n");
+  //printfl();
   if(free_block !=NULL){
+    // printf("target size to malloc:%zu,free_block found:%p, with size:%zu\n",size,free_block,free_block->size);
     return split(free_block,size);
   }
   //else allocate new memory
   else{
+    //printf("new space allocated, now break pos:%p\n",sbrk(0));
     return allocate_newmemo(size);
   }
 
@@ -191,12 +199,14 @@ void *ff_malloc(size_t size){
 
 // first fit free
 void ff_free(void * ptr){
-  meta *free_block = (meta *)(char *) ptr-sizeof(meta);
+  meta *free_block = (meta *)((char *) ptr-sizeof(meta));
+  //printf("free function - before free block\n");
+  // printfl();
   free_block->isfree =1;
   add_freeblk(free_block);
-
   merge(free_block);
-  
+  // printf("after add free block to free list\n");
+  // printfl();
 }
 
 //best fit malloc
@@ -207,4 +217,17 @@ void *bf_malloc(size_t size){
 //best fit free
 void bf_free(void *ptr){
   ff_free(ptr);
+}
+
+unsigned long get_data_segment_size(){
+  return total_size;
+}
+
+unsigned long get_data_segment_free_space_size(){
+  meta * cur = fhead;
+  while(cur!=NULL){
+    free_size += cur->size+sizeof(meta);
+    cur = cur->next;
+  }
+  return free_size;
 }

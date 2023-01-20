@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
   for (i=0; i < size; i++) {
     sum += array[0][i];
   } //for i
-
+  
   size = 16;
   expected_sum += size * size;
   array[1] = (int *)MALLOC(size * sizeof(int));
@@ -60,7 +60,6 @@ int main(int argc, char *argv[])
   for (i=0; i < size; i++) {
     sum += array[3][i];
   } //for i
-
   FREE(array[0]);
   FREE(array[2]);
 
