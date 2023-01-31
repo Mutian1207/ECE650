@@ -9,7 +9,7 @@ static unsigned long free_size = 0;
 
 void printfl(){                
   meta *cur = fhead;
-  printf("print free list once\n");
+   printf("print free list once\n");
   while(cur!=NULL){
     printf("cur : %p, cur->size: %zu\n",cur,cur->size);
     cur = cur->next;
@@ -154,6 +154,8 @@ void add_freeblk(meta *blk){
 }
 // merge two free blocks
 void merge(meta*blk){
+  //  printf("before merge\n");
+  // printfl();
   if(blk->next!=NULL){
     if((char*)blk + sizeof(meta) + blk->size == (char*) blk->next){
       blk->size += sizeof(meta);
@@ -169,7 +171,8 @@ void merge(meta*blk){
     }
 
   }
-  
+  //printf("after merge\n");
+  //printfl();
 }
 
 
