@@ -1,11 +1,15 @@
-all: server player
+all: ringmaster player
 
-server: server.cpp helper.cpp
-	g++ -g -o $@ server.cpp helper.cpp 
-player: player.cpp helper.cpp 
-	g++ -g -o player player.cpp helper.cpp 
+ringmaster: ringmaster.o helper.cpp 
+	g++ -g -o $@ $< helper.cpp
+player: player.o helper.cpp
+	g++ -g -o $@ $< helper.cpp
+%.o: %.cpp
+	g++ -g -c $<
+ringmaster.o:helper.hpp
+player.o:helper.hpp
 
 .PHONY:
 	clean
 clean:
-	rm -rf *.o server player *~ *#
+	rm -rf *.o ringmaster player *.cpp~ *.hpp~ *#

@@ -117,19 +117,25 @@ int build_client(const char *hostname, const char *port){
   return sock_fd;
 
 }
-int get_ip(struct sockaddr sock_addr){
-  // std::cout<<"get ip address:"<< sock_addr.sa_data;
-   struct sockaddr_in *sock_addr_in = (struct sockaddr_in *)&sock_addr;
-   // std::cout<<"get ip address2:" << sock_addr_in->sin_addr.s_addr;
-  return sock_addr_in->sin_addr.s_addr;
+std::string get_ip(int sock_fd){
+  struct sockaddr_in sock_addr;
+  socklen_t len = sizeof(sock_addr);
+  if(getsockname(sock_fd, (struct sockaddr *)&sock_addr,&len)==-1){
+    std::cerr<<"ERROR: cannot get IP address"<<std::endl;
+  }
+  // const char *inet_ntop(int af, const void *restrict src,
+  //                      char *restrict dst, socklen_t size);
+
+  std::string ip;
+  ip = inet_ntoa(sock_addr.sin_addr);
+  
+  return ip;
 }
 
-int server_accept(int socket_fd, std::string *ip){
+int server_accept(int socket_fd){
   struct sockaddr addr;
   socklen_t addrlen = sizeof(addr);
   int client_fd = accept(socket_fd, &addr, &addrlen);
- 
-  // *ip = get_ip(addr);
   return client_fd;
 }
 
