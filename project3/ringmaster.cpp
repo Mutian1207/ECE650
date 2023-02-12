@@ -35,6 +35,9 @@ int main(int argc, char *argv[]){
     //receive response from player (ready to go)
     recv(client_fd,&player_server_fd,sizeof(player_server_fd),0);
     std::cout<<"Player "<<i<<" is ready to play"<<std::endl;
+    std::cout<<"client fd:"<<client_fd<<std::endl;
+    std::cout<<"player server fd:"<<player_server_fd<<std::endl;
+    
   }
 
 
