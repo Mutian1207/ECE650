@@ -52,7 +52,9 @@ int init_server(const char * port){
     std::cerr<<" (hostname: "<< hostname<<" "<<", port: "<<port<<")"<<std::endl;
     exit(EXIT_FAILURE);
   }
-  
+  if(strcmp(port,"")==0){
+    ((struct sockaddr_in *)(host_info_list->ai_addr))->sin_port = 0;
+  }
   sock_fd = socket(host_info_list->ai_family,
                    host_info_list->ai_socktype,
                    host_info_list->ai_protocol);
