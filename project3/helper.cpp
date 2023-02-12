@@ -52,6 +52,7 @@ int init_server(const char * port){
     std::cerr<<" (hostname: "<< hostname<<" "<<", port: "<<port<<")"<<std::endl;
     exit(EXIT_FAILURE);
   }
+  
   sock_fd = socket(host_info_list->ai_family,
                    host_info_list->ai_socktype,
                    host_info_list->ai_protocol);

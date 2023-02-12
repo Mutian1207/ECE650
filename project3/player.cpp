@@ -22,6 +22,7 @@ int main(int argc,char*argv[]){
   //player plays as a server -> for connection to neighbor
   auto player_fd = init_server("");
   //from client send player ready to play info to ringmaster
+  std::cout<<"player side player fd:"<<player_fd<<std::endl;
   send(to_master_fd,&player_fd,sizeof(player_no),0);
   
 
