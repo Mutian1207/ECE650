@@ -46,7 +46,8 @@ int init_server(const char * port){
   host.ai_family=AF_UNSPEC;
   host.ai_socktype=SOCK_STREAM;
   host.ai_flags=AI_PASSIVE;
-
+  std::cout<<"hostname: "<<hostname<<" port: "<<port<<std::endl;
+  std::cout<<"getaddrinfo: "<<getaddrinfo(hostname,port,&host,&host_info_list)<<std::endl;
   if(getaddrinfo(hostname,port,&host,&host_info_list)!=0){
     std::cerr<<"ERROR: cannot get address info for host"<<std::endl;
     std::cerr<<" (hostname: "<< hostname<<" "<<", port: "<<port<<")"<<std::endl;
