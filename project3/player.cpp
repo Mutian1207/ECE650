@@ -27,8 +27,10 @@ int main(int argc,char*argv[]){
   //std::string str = std::to_string(local_port);
   //const char* port = str.c_str(); 
   auto player_fd = init_server(Myport);
+  int player_port = get_port(player_fd);
   //from client send player ready to play info to ringmaster
   std::cout<<"player side player fd:"<<player_fd<<std::endl;
+  std::cout<<"player port numb:"<< player_port<<std::endl;
   send(to_master_fd,&player_fd,sizeof(player_no),0);
   
 

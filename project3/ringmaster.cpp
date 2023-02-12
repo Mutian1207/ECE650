@@ -34,6 +34,7 @@ int main(int argc, char *argv[]){
     send(client_fd,&i,sizeof(i),0);
     send(client_fd,&num_players,sizeof(num_players),0);
     send(client_fd,&num_hops,sizeof(num_hops),0);
+    std::cout<<"client port:"<<client_port<<std::endl;
     
     //receive response from player (ready to go)
     recv(client_fd,&player_server_fd,sizeof(player_server_fd),0);
