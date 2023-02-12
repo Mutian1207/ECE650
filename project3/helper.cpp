@@ -106,7 +106,8 @@ int build_client(const char *hostname, const char *port){
   }
 
   std::cout<<"connecting to hostname:"<<hostname<<"on port:"<<port<<"..."<<std::endl;
-  std::cout<<"host_info_list->ai_addr:" <<host_info_list->ai_addr<<std::endl;
+
+  
   if(connect(sock_fd,host_info_list->ai_addr,host_info_list->ai_addrlen)==-1){
     std::cerr<<"ERROR: cannot connect to socket"<<std::endl;
     std::cerr<<" (hostname: "<< hostname<<" "<<", port: "<<port<<")"<<std::endl;
@@ -117,9 +118,9 @@ int build_client(const char *hostname, const char *port){
 
 }
 int get_ip(struct sockaddr sock_addr){
-  std::cout<<"get ip address:"<< sock_addr.sa_data;
-  struct sockaddr_in *sock_addr_in = (struct sockaddr_in *)&sock_addr;
-  std::cout<<"get ip address2:" << sock_addr_in->sin_addr.s_addr;
+  // std::cout<<"get ip address:"<< sock_addr.sa_data;
+   struct sockaddr_in *sock_addr_in = (struct sockaddr_in *)&sock_addr;
+   // std::cout<<"get ip address2:" << sock_addr_in->sin_addr.s_addr;
   return sock_addr_in->sin_addr.s_addr;
 }
 
@@ -127,8 +128,8 @@ int server_accept(int socket_fd, std::string *ip){
   struct sockaddr addr;
   socklen_t addrlen = sizeof(addr);
   int client_fd = accept(socket_fd, &addr, &addrlen);
-  std::cout<<"this server socket_fd:"<<socket_fd<<"receive client_fd:"<<client_fd<<std::endl;
-  *ip = get_ip(addr);
+ 
+  // *ip = get_ip(addr);
   return client_fd;
 }
 

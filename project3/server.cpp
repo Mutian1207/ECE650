@@ -22,6 +22,7 @@ int main(int argc, char *argv[]){
   int client_fd;
   std::string *client_ip;
   //build client
+  std::cout<<"ring master socket fd:"<<master_fd<<std::endl;
   for(auto i =0 ;i<num_players;i++){
     client_fd = server_accept(master_fd,client_ip);
     std::cout<<"client fd:"<<client_fd<<std::endl;
