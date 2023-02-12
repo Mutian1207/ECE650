@@ -21,17 +21,20 @@ int main(int argc, char *argv[]){
   // build client info
   int client_fd;
   int player_server_fd;
-  std::string ip;
+  std::string client_ip;
+  int client_port;
   //build client
   std::cout<<"ring master socket fd:"<<master_fd<<std::endl;
   for(auto i =0 ;i<num_players;i++){
     client_fd = server_accept(master_fd);
-    ip = get_ip(client_fd);
+    client_ip = get_ip(client_fd);
+    client_port = get_port(client_fd);
     //  ssize_t send(int sockfd, const void *buf, size_t len, int flags);
     //send player number and total player number and num_hops to client
     send(client_fd,&i,sizeof(i),0);
     send(client_fd,&num_players,sizeof(num_players),0);
     send(client_fd,&num_hops,sizeof(num_hops),0);
+    send(client_fd,&client_port,sizeof(client_port),0);
     //receive response from player (ready to go)
     recv(client_fd,&player_server_fd,sizeof(player_server_fd),0);
     std::cout<<"Player "<<i<<" is ready to play"<<std::endl;

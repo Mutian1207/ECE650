@@ -46,15 +46,16 @@ int init_server(const char * port){
   host.ai_family=AF_UNSPEC;
   host.ai_socktype=SOCK_STREAM;
   host.ai_flags=AI_PASSIVE;
-  std::cout<<" port: "<<port<<std::endl;
-  std::cout<<"getaddrinfo: "<<getaddrinfo(hostname,port,&host,&host_info_list)<<std::endl;
+ 
+  
   if(getaddrinfo(hostname,port,&host,&host_info_list)!=0){
     std::cerr<<"ERROR: cannot get address info for host"<<std::endl;
     std::cerr<<" (hostname: "<< hostname<<" "<<", port: "<<port<<")"<<std::endl;
     exit(EXIT_FAILURE);
   }
-  if(strcmp(port,"")==0){
-    ((struct sockaddr_in *)(host_info_list->ai_addr))->sin_port = 0;
+  if (strcmp(port, "") == 0) {
+    struct sockaddr_in * addr_in = (struct sockaddr_in *)(host_info_list->ai_addr);
+    addr_in->sin_port = 0;
   }
   sock_fd = socket(host_info_list->ai_family,
                    host_info_list->ai_socktype,
@@ -153,7 +154,7 @@ int get_port(int socket_fd){
 
   struct sockaddr_in *addr_in = (struct sockaddr_in *)&addr;
   
-  std::cout<<"port number:"<<addr_in->sin_port;
-  return 0;
+  return ntohs(addr_in->sin_port);
+ 
 
 }

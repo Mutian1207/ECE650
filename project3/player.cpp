@@ -14,12 +14,17 @@ int main(int argc,char*argv[]){
   auto player_no=0;
   auto num_players=0;
   auto num_hops = 0;
+  auto local_port = 0;
   std::cout<<"connection built"<<std::endl;
   recv(to_master_fd,&player_no,sizeof(player_no),0);
   recv(to_master_fd,&num_players,sizeof(num_players),0);
   recv(to_master_fd,&num_hops,sizeof(num_hops),0);
+  recv(to_master_fd,&local_port,sizeof(local_port),0);
   std::cout<<"build player server..."<<std::endl;
   //player plays as a server -> for connection to neighbor
+
+  //std::string str = std::to_string(local_port);
+  //const char* port = str.c_str(); 
   auto player_fd = init_server("");
   //from client send player ready to play info to ringmaster
   std::cout<<"player side player fd:"<<player_fd<<std::endl;
