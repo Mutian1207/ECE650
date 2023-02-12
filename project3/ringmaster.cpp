@@ -25,6 +25,7 @@ int main(int argc, char *argv[]){
   int client_port;
   //build client
   std::cout<<"ring master socket fd:"<<master_fd<<std::endl;
+  std::cout<<"ring master port :"<<get_port(master_fd)<<std::endl;
   for(auto i =0 ;i<num_players;i++){
     client_fd = server_accept(master_fd);
     client_ip = get_ip(client_fd);
@@ -34,14 +35,15 @@ int main(int argc, char *argv[]){
     send(client_fd,&i,sizeof(i),0);
     send(client_fd,&num_players,sizeof(num_players),0);
     send(client_fd,&num_hops,sizeof(num_hops),0);
-    std::cout<<"client port:"<<client_port<<std::endl;
+   
     
     //receive response from player (ready to go)
     recv(client_fd,&player_server_fd,sizeof(player_server_fd),0);
     std::cout<<"Player "<<i<<" is ready to play"<<std::endl;
     std::cout<<"client fd:"<<client_fd<<std::endl;
+    std::cout<<"client port:"<<client_port<<std::endl;
     std::cout<<"player server fd:"<<player_server_fd<<std::endl;
-    
+    std::cout<<"player server port:"<<get_port(player_server_fd)<<std::endl;
   }
 
 
