@@ -41,7 +41,7 @@ int init_server(const char * port){
   int sock_fd;
   struct addrinfo host;
   struct addrinfo * host_info_list;
-
+  
   memset(&host,0,sizeof(host));
   host.ai_family=AF_UNSPEC;
   host.ai_socktype=SOCK_STREAM;

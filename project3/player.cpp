@@ -18,7 +18,7 @@ int main(int argc,char*argv[]){
   recv(to_master_fd,&player_no,sizeof(player_no),0);
   recv(to_master_fd,&num_players,sizeof(num_players),0);
   recv(to_master_fd,&num_hops,sizeof(num_hops),0);
-
+  std::cout<<"build player server..."<<std::endl;
   //player plays as a server -> for connection to neighbor
   auto player_fd = init_server("");
   //from client send player ready to play info to ringmaster
