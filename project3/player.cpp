@@ -14,7 +14,7 @@ int main(int argc,char*argv[]){
   auto player_no=0;
   auto num_players=0;
   auto num_hops = 0;
-  
+  std::cout<<"connection built"<<std::endl;
   recv(to_master_fd,&player_no,sizeof(player_no),0);
   recv(to_master_fd,&num_players,sizeof(num_players),0);
   recv(to_master_fd,&num_hops,sizeof(num_hops),0);
