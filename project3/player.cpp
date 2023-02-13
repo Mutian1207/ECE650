@@ -29,10 +29,10 @@ int main(int argc,char*argv[]){
   //const char* port = str.c_str(); 
   auto player_fd = init_server(Myport);
   std::string player_ip = get_ip(player_fd);
-  std::string to_master_ip = get_ip(player_fd);
+  std::string to_master_ip = get_ip(to_master_fd);
   int player_port = get_port(player_fd);
   std::cout<<"player server ip:"<<player_ip<<std::endl;
-  std::cout<<"to master ip:"<<to_master_ip<<std::endl;
+  std::cout<<"to master ip :"<<to_master_ip<<std::endl;
   
   //from client send player ready to play info to ringmaster
   //  std::cout<<"to master fd:"<<to_master_fd<<std::endl;
@@ -41,8 +41,8 @@ int main(int argc,char*argv[]){
   // std::cout<<"player side player fd:"<<player_fd<<std::endl;
   //std::cout<<"player port numb:"<< player_port<<std::endl;
   send(to_master_fd,&player_port,sizeof(player_no),0);
+  std::cout<<"Connected as player "<<player_no << " out of "<<num_players<< " total players"<<std::endl;
   
-
   
   close(to_master_fd);
   return 0;
