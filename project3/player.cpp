@@ -30,14 +30,15 @@ int main(int argc,char*argv[]){
   int player_server_fd = init_server(Myport);
   std::string master_fd_ip = get_ip(to_master_fd);
   // std::string player_ip = get_ip(player_server_fd);
-  char to_master_ip[master_fd_ip.length()+1];
-
+  char to_master_ip[100];
+  memset(to_master_ip,0,sizeof(to_master_ip));
+  strcpy(to_master_ip,master_fd_ip.c_str());
   
   /*for(size_t i = 0;i<get_ip(to_master_fd).length();i++){
     std::cout<<"char:"<<get_ip(to_master_fd)[i];
     to_master_ip[i]= master_fd_ip[i];
     }*/
-   memmove(to_master_ip,master_fd_ip.c_str(),sizeof(to_master_ip));
+    //memmove(to_master_ip,master_fd_ip.c_str(),sizeof(to_master_ip));
  
      
   
