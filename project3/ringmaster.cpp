@@ -45,8 +45,7 @@ int main(int argc, char *argv[]){
     recv(client_fd,&player_ip,sizeof(player_ip),0);
     std::string player_ip_store = std::string(player_ip);
     std::cout<<"receive player ip: "<<player_ip<<" , receive player port: "<<client_port<<std::endl;
-    std::vector<int> player_fd_port{i,client_fd,client_port};
-    
+    std::vector<int> player_fd_port{i,client_fd,client_port};    
     std::pair<std::vector<int>,std::string > newp{player_fd_port,player_ip_store};
     player_all.push_back(newp);
     std::cout<<"Player "<<i<<" is ready to play"<<std::endl;
@@ -62,7 +61,7 @@ int main(int argc, char *argv[]){
     int right_neighbor = (i+1)%num_players;
     int right_neighbor_server_port = player_all[right_neighbor].first[2];
     std::string right_neighbor_str_ip = player_all[right_neighbor].second;
-    char right_neighbor_server_ip[right_neighbor_str_ip.length()];
+    char right_neighbor_server_ip[right_neighbor_str_ip.length()+1];
     memmove(right_neighbor_server_ip,right_neighbor_str_ip.c_str(),sizeof(right_neighbor_server_ip));
     std::cout<<"right_neighbor_server_ip:"<<right_neighbor_server_ip<<std::endl;
     //send through the right client and ringmaster server fd
@@ -74,13 +73,14 @@ int main(int argc, char *argv[]){
   //Ready to go
   srand((unsigned int)time(NULL)+num_players);
   int random = rand()%num_players;
-  std::cout<<"Ready to start the game, sending potato to player "<<random<<std::endl;
+
   //init potato
 
   Potato po(num_hops);
   //pass potato to first player and receive last potato
   if(num_hops!=0){
     send(player_all[random].first[1],&po,sizeof(po),0);
+      std::cout<<"Ready to start the game, sending potato to player "<<random<<std::endl;
     fd_set rfds;
     int maxfd = -1;
     FD_ZERO(&rfds);

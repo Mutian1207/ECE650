@@ -75,13 +75,13 @@ int main(int argc,char*argv[]){
 
   //test right neighbor and left neighbor
   srand((unsigned int)time(NULL)+player_no);
-  /*  int signal = rand()%277;
+    int signal = rand()%277;
   std::cout<<"sending to left neighbor:"<<signal<<std::endl;
   send(left_neighbor_fd,&signal,sizeof(signal),0);
   int rec;
   recv(right_neighbor_fd,&rec,sizeof(rec),0);
   std::cout<<"receive:"<<rec<<std::endl;
-  */
+  
   
   // receive the potato to start the game
   Potato potato;
