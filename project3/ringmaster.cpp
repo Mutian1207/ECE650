@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
   std::string client_ip;
   int client_port;
  
-  std::vector< std::pair<std::vector<int>,char *> > player_all;
+  std::vector< std::pair<std::vector<int>,std::string> > player_all;
   
   //build client
   //  std::cout<<"ring master socket fd:"<<master_fd<<std::endl;
@@ -38,16 +38,16 @@ int main(int argc, char *argv[]){
     send(client_fd,&num_hops,sizeof(num_hops),0);
 
     char player_ip[100];
-    char player_ip_store[100];
+    
     
     //receive player server port and ip from player (ready to go)
     recv(client_fd,&client_port,sizeof(client_port),0);
     recv(client_fd,&player_ip,sizeof(player_ip),0);
-    memmove(player_ip_store,player_ip,sizeof(player_ip_store));
+    std::string player_ip_store = std::string(player_ip);
     std::cout<<"receive player ip: "<<player_ip<<" , receive player port: "<<client_port<<std::endl;
     std::vector<int> player_fd_port{i,client_fd,client_port};
     
-    std::pair<std::vector<int>,char * > newp{player_fd_port,player_ip_store};
+    std::pair<std::vector<int>,std::string > newp{player_fd_port,player_ip_store};
     player_all.push_back(newp);
     std::cout<<"Player "<<i<<" is ready to play"<<std::endl;
     //    std::cout<<"client fd ip:"<<player_ip<<std::endl;
@@ -61,8 +61,9 @@ int main(int argc, char *argv[]){
    for(auto i =0 ;i<num_players;i++){
     int right_neighbor = (i+1)%num_players;
     int right_neighbor_server_port = player_all[right_neighbor].first[2];
-    char right_neighbor_server_ip[100];
-    memmove(right_neighbor_server_ip,player_all[right_neighbor].second,sizeof(right_neighbor_server_ip));
+    std::string right_neighbor_str_ip = player_all[right_neighbor].second;
+    char right_neighbor_server_ip[right_neighbor_str_ip.length()];
+    memmove(right_neighbor_server_ip,right_neighbor_str_ip.c_str(),sizeof(right_neighbor_server_ip));
     std::cout<<"right_neighbor_server_ip:"<<right_neighbor_server_ip<<std::endl;
     //send through the right client and ringmaster server fd
     send(player_all[i].first[1],&right_neighbor_server_port,sizeof(right_neighbor_server_port),0);
