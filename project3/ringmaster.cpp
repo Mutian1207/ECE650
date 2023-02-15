@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
     //receive player server port and ip from player (ready to go)
     recv(client_fd,&client_port,sizeof(client_port),0);
     recv(client_fd,&player_ip,sizeof(player_ip),0);
-    //    std::cout<<"receive player ip: "<<player_ip<<" , receive player port: "<<client_port<<std::endl;
+    std::cout<<"receive player ip: "<<player_ip<<" , receive player port: "<<client_port<<std::endl;
     std::vector<int> player_fd_port{i,client_fd,client_port};
     
     std::pair<std::vector<int>,char * > newp{player_fd_port,player_ip};

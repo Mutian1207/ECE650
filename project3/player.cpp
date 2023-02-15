@@ -68,8 +68,8 @@ int main(int argc,char*argv[]){
 
   char right_port[100];
   sprintf(right_port,"%d",right_neighbor_server_port);
-  //std::cout<<"right neighbor_server_ip:"<<right_neighbor_server_ip<<std::endl;
-  //std::cout<<"right neighbor port:"<<right_port<<std::endl;
+  std::cout<<"right neighbor_server_ip:"<<right_neighbor_server_ip<<std::endl;
+  std::cout<<"right neighbor port:"<<right_port<<std::endl;
   int right_neighbor_fd = build_client(right_neighbor_server_ip,right_port);
   int left_neighbor_fd = server_accept(player_server_fd);
 
