@@ -57,6 +57,7 @@ int init_server(const char * port){
     struct sockaddr_in * addr_in = (struct sockaddr_in *)(host_info_list->ai_addr);
     addr_in->sin_port = 0;
   }
+
   sock_fd = socket(host_info_list->ai_family,
                    host_info_list->ai_socktype,
                    host_info_list->ai_protocol);
@@ -91,7 +92,7 @@ int build_client(const char *hostname, const char *port){
   struct addrinfo host;
   struct addrinfo * host_info_list;
   int sock_fd;
-  
+  // std::cout<<"const char *hostname:"<<hostname<<std::endl;
   memset(&host,0,sizeof(host));
   host.ai_family=AF_UNSPEC;
   host.ai_socktype=SOCK_STREAM;
@@ -110,7 +111,7 @@ int build_client(const char *hostname, const char *port){
  
   }
 
-  std::cout<<"connecting to hostname:"<<hostname<<"on port:"<<port<<"..."<<std::endl;
+  //  std::cout<<"connecting to hostname:"<<hostname<<"on port:"<<port<<"..."<<std::endl;
 
   
   if(connect(sock_fd,host_info_list->ai_addr,host_info_list->ai_addrlen)==-1){
@@ -141,6 +142,9 @@ int server_accept(int socket_fd){
   struct sockaddr addr;
   socklen_t addrlen = sizeof(addr);
   int client_fd = accept(socket_fd, &addr, &addrlen);
+
+
+
   return client_fd;
 }
 

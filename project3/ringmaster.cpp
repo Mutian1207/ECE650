@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
   std::string client_ip;
   int client_port;
  
-  std::vector< std::pair<std::vector<int>,std::string> > player_all;
+  std::vector< std::pair<std::vector<int>,char *> > player_all;
   
   //build client
   //  std::cout<<"ring master socket fd:"<<master_fd<<std::endl;
@@ -37,32 +37,92 @@ int main(int argc, char *argv[]){
     send(client_fd,&num_players,sizeof(num_players),0);
     send(client_fd,&num_hops,sizeof(num_hops),0);
 
-    
-    //receive response from player (ready to go)
+    char player_ip[100];
+    //receive player server port and ip from player (ready to go)
     recv(client_fd,&client_port,sizeof(client_port),0);
-    std::vector<int> player_fd_port{client_fd,client_port};
-    std::string player_ip = get_ip(client_fd);
-    std::pair<std::vector<int>,std::string > newp{player_fd_port,player_ip};
+    recv(client_fd,&player_ip,sizeof(player_ip),0);
+    //    std::cout<<"receive player ip: "<<player_ip<<" , receive player port: "<<client_port<<std::endl;
+    std::vector<int> player_fd_port{i,client_fd,client_port};
+    
+    std::pair<std::vector<int>,char * > newp{player_fd_port,player_ip};
     player_all.push_back(newp);
     std::cout<<"Player "<<i<<" is ready to play"<<std::endl;
-    std::cout<<"client fd ip:"<<player_ip<<std::endl;
+    //    std::cout<<"client fd ip:"<<player_ip<<std::endl;
     // std::cout<<"client fd:"<<client_fd<<std::endl;
     //std::cout<<"client port:"<<client_port<<std::endl;
     //std::cout<<"player server fd:"<<player_server_fd<<std::endl;
     //std::cout<<"player server port:"<<get_port(player_server_fd)<<std::endl;
   }
   
+  //connect neighbors
+   for(auto i =0 ;i<num_players;i++){
+    int right_neighbor = (i+1)%num_players;
+    int right_neighbor_server_port = player_all[right_neighbor].first[2];
+    char right_neighbor_server_ip[100];
+    memmove(right_neighbor_server_ip,player_all[right_neighbor].second,sizeof(right_neighbor_server_ip));
+    
+    //send through the right client and ringmaster server fd
+    send(player_all[i].first[1],&right_neighbor_server_port,sizeof(right_neighbor_server_port),0);
+    send(player_all[i].first[1],&right_neighbor_server_ip,sizeof(right_neighbor_server_ip),0);
+    
+    }
   
   //Ready to go
   srand((unsigned int)time(NULL)+num_players);
   int random = rand()%num_players;
   std::cout<<"Ready to start the game, sending potato to player "<<random<<std::endl;
-  
+  //init potato
 
-  
-  
+  Potato po(num_hops);
+  //pass potato to first player and receive last potato
+  if(num_hops!=0){
+    send(player_all[random].first[1],&po,sizeof(po),0);
+    fd_set rfds;
+    int maxfd = -1;
+    FD_ZERO(&rfds);
+    for(auto vec:player_all){
+      maxfd = std::max(maxfd,vec.first[1]);
+      FD_SET(vec.first[1],&rfds);
+    }
 
-  close(master_fd);
-  close(client_fd);
+    int retval = select(maxfd+1,&rfds,NULL,NULL,NULL);
+    if(retval ==0){
+      std::cerr<<"time out"<<std::endl;
+    }else if(retval ==-1){
+      std::cerr<<"select() error"<<std::endl;
+    }else{
+      for(int i = 0;i<num_players;i++){
+        if(FD_ISSET(player_all[i].first[1],&rfds)){
+          recv(player_all[i].first[1],&po,sizeof(po),0);
+          assert(po.hops_left==0);
+          break;
+        }
+      } 
+    }
+
+    //send last potato to all players to shut down
+    for(auto vec:player_all){
+      send(vec.first[1],&po,sizeof(po),0);
+    }
+    std::cout<<"Trace of potato:"<<std::endl;
+    for(int i =0;i<po.cnt;i++){
+      if(i!=po.cnt-1){
+        std::cout<<po.path[i]<<",";
+      }else{
+        std::cout<<po.path[i]<<std::endl;
+      }
+    }
+
+    
+  }
+  
+  
+  
+ 
+    for(size_t i = 0;i<player_all.size();i++){
+    close(player_all[i].first[1]);
+
+    }
+    close(master_fd);
   return 0;
 }
