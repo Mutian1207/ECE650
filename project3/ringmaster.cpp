@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
     send(client_fd,&i,sizeof(i),0);
     send(client_fd,&num_players,sizeof(num_players),0);
     send(client_fd,&num_hops,sizeof(num_hops),0);
-
+    //allocate enough sapce to receive ip
     char player_ip[100];
     
     
@@ -61,9 +61,9 @@ int main(int argc, char *argv[]){
     int right_neighbor = (i+1)%num_players;
     int right_neighbor_server_port = player_all[right_neighbor].first[2];
     std::string right_neighbor_str_ip = player_all[right_neighbor].second;
-    char right_neighbor_server_ip[100];
+    char right_neighbor_server_ip[right_neighbor_str_ip.length()+1];
     memset(right_neighbor_server_ip, 0, sizeof(right_neighbor_server_ip));
-    strcpy(right_neighbor_server_ip,right_neighbor_str_ip.c_str());
+    memmove(right_neighbor_server_ip,right_neighbor_str_ip.c_str(),sizeof(right_neighbor_server_ip));
     std::cout<<"right_neighbor_server_ip:"<<right_neighbor_server_ip<<std::endl;
     //send through the right client and ringmaster server fd
     send(player_all[i].first[1],&right_neighbor_server_port,sizeof(right_neighbor_server_port),0);

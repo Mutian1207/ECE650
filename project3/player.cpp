@@ -30,9 +30,9 @@ int main(int argc,char*argv[]){
   int player_server_fd = init_server(Myport);
   std::string master_fd_ip = get_ip(to_master_fd);
   // std::string player_ip = get_ip(player_server_fd);
-  char to_master_ip[100];
+  char to_master_ip[master_fd_ip.length()+1];
   memset(to_master_ip,0,sizeof(to_master_ip));
-  strcpy(to_master_ip,master_fd_ip.c_str());
+  memmove(to_master_ip,master_fd_ip.c_str(),sizeof(to_master_ip));
   
   /*for(size_t i = 0;i<get_ip(to_master_fd).length();i++){
     std::cout<<"char:"<<get_ip(to_master_fd)[i];
@@ -62,6 +62,7 @@ int main(int argc,char*argv[]){
     connecting to right neighbor
     receive right neighbor ip(hostname) + port from ringmaster
  */
+  //enough space to receive ip
   char right_neighbor_server_ip[100];
   int right_neighbor_server_port;
   recv(to_master_fd,&right_neighbor_server_port,sizeof(right_neighbor_server_port),0);
