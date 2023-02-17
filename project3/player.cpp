@@ -44,7 +44,7 @@ int main(int argc,char*argv[]){
   
   int player_port = get_port(player_server_fd);
   //  std::cout<<"player server ip:"<<player_ip<<std::endl;
-  std::cout<<"to master ip :"<<to_master_ip<<std::endl;
+  //  std::cout<<"to master ip :"<<to_master_ip<<std::endl;
   
   //from client send player ready to play info to ringmaster
   //  std::cout<<"to master fd:"<<to_master_fd<<std::endl;
@@ -69,19 +69,19 @@ int main(int argc,char*argv[]){
 
   char right_port[100];
   sprintf(right_port,"%d",right_neighbor_server_port);
-  std::cout<<"right neighbor_server_ip:"<<right_neighbor_server_ip<<std::endl;
-  std::cout<<"right neighbor port:"<<right_port<<std::endl;
+  // std::cout<<"right neighbor_server_ip:"<<right_neighbor_server_ip<<std::endl;
+  // std::cout<<"right neighbor port:"<<right_port<<std::endl;
   int right_neighbor_fd = build_client(right_neighbor_server_ip,right_port);
   int left_neighbor_fd = server_accept(player_server_fd);
 
   //test right neighbor and left neighbor
   srand((unsigned int)time(NULL)+player_no);
     int signal = rand()%277;
-  std::cout<<"sending to left neighbor:"<<signal<<std::endl;
+    //std::cout<<"sending to left neighbor:"<<signal<<std::endl;
   send(left_neighbor_fd,&signal,sizeof(signal),0);
   int rec;
   recv(right_neighbor_fd,&rec,sizeof(rec),0);
-  std::cout<<"receive:"<<rec<<std::endl;
+  //std::cout<<"receive:"<<rec<<std::endl;
   
   
   // receive the potato to start the game

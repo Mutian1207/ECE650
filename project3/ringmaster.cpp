@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
     recv(client_fd,&client_port,sizeof(client_port),0);
     recv(client_fd,&player_ip,sizeof(player_ip),0);
     std::string player_ip_store = std::string(player_ip);
-    std::cout<<"receive player ip: "<<player_ip<<" , receive player port: "<<client_port<<std::endl;
+    //    std::cout<<"receive player ip: "<<player_ip<<" , receive player port: "<<client_port<<std::endl;
     std::vector<int> player_fd_port{i,client_fd,client_port};    
     std::pair<std::vector<int>,std::string > newp{player_fd_port,player_ip_store};
     player_all.push_back(newp);
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]){
     char right_neighbor_server_ip[100];
     memset(right_neighbor_server_ip, 0, sizeof(right_neighbor_server_ip));
     strcpy(right_neighbor_server_ip,right_neighbor_str_ip.c_str());
-    std::cout<<"right_neighbor_server_ip:"<<right_neighbor_server_ip<<std::endl;
+    //std::cout<<"right_neighbor_server_ip:"<<right_neighbor_server_ip<<std::endl;
     //send through the right client and ringmaster server fd
     send(player_all[i].first[1],&right_neighbor_server_port,sizeof(right_neighbor_server_port),0);
     send(player_all[i].first[1],&right_neighbor_server_ip,sizeof(right_neighbor_server_ip),0);
