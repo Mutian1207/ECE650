@@ -81,7 +81,7 @@ int main(int argc, char *argv[]){
   //pass potato to first player and receive last potato
   if(num_hops!=0){
     send(player_all[random].first[1],&po,sizeof(po),0);
-      std::cout<<"Ready to start the game, sending potato to player "<<random<<std::endl;
+    std::cout<<"Ready to start the game, sending potato to player "<<random<<std::endl;
     fd_set rfds;
     int maxfd = -1;
     FD_ZERO(&rfds);
