@@ -74,15 +74,15 @@ int main(int argc,char*argv[]){
   int right_neighbor_fd = build_client(right_neighbor_server_ip,right_port);
   std::string left_neighbor_ip;
   int left_neighbor_fd = server_accept(player_server_fd,&left_neighbor_ip);
-
+  std::cout<<"left neighbor ip:"<<left_neighbor_ip<<std::endl;
   //test right neighbor and left neighbor
   srand((unsigned int)time(NULL)+player_no);
     int signal = rand()%277;
-    //std::cout<<"sending to left neighbor:"<<signal<<std::endl;
+  std::cout<<"sending to left neighbor:"<<signal<<std::endl;
   send(left_neighbor_fd,&signal,sizeof(signal),0);
   int rec;
   recv(right_neighbor_fd,&rec,sizeof(rec),0);
-  //std::cout<<"receive:"<<rec<<std::endl;
+  std::cout<<"receive:"<<rec<<std::endl;
   
   
   // receive the potato to start the game
@@ -134,18 +134,18 @@ int main(int argc,char*argv[]){
     }else{
       int tmp_fd = -1;
       if(FD_ISSET(to_master_fd,&rfds)){
-
+        std::cout<<"receive from ringmaster"<<std::endl;
         tmp_fd = to_master_fd;
       }else if(FD_ISSET(right_neighbor_fd,&rfds)){
-
+        std::cout<<"receive from right neighbor"<<std::endl;
         tmp_fd = right_neighbor_fd;
       }else if(FD_ISSET(left_neighbor_fd,&rfds)){
-
+        std::cout<<"receive from left neighbor"<<std::endl;
         tmp_fd = left_neighbor_fd;
       }
       assert(tmp_fd!=-1);
       recv(tmp_fd,&potato,sizeof(potato),0);
-      //   std::cout<<"receive! potato hopsleft:"<<potato.hops_left<<std::endl;
+      std::cout<<"receive! potato hopsleft:"<<potato.hops_left<<std::endl;
     }
     if(potato.hops_left==1){
       potato.hops_left--;

@@ -98,6 +98,8 @@ int main(int argc, char *argv[]){
     }else{
       for(int i = 0;i<num_players;i++){
         if(FD_ISSET(player_all[i].first[1],&rfds)){
+          std::cout<<"receive last potato from player "<<i<<std::endl;
+          std::cout<<"potato hops left:"<<po.hops_left<<std::endl;
           recv(player_all[i].first[1],&po,sizeof(po),0);
           assert(po.hops_left==0);
           break;
