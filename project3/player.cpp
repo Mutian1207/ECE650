@@ -30,9 +30,9 @@ int main(int argc,char*argv[]){
   int player_server_fd = init_server(Myport);
   std::string master_fd_ip = get_ip(to_master_fd);
   // std::string player_ip = get_ip(player_server_fd);
-  char to_master_ip[100];
-  memset(to_master_ip,0,sizeof(to_master_ip));
-  strcpy(to_master_ip,master_fd_ip.c_str());
+  //char to_master_ip[100];
+  // memset(to_master_ip,0,sizeof(to_master_ip));
+  //strcpy(to_master_ip,master_fd_ip.c_str());
   
   /*for(size_t i = 0;i<get_ip(to_master_fd).length();i++){
     std::cout<<"char:"<<get_ip(to_master_fd)[i];
@@ -54,7 +54,7 @@ int main(int argc,char*argv[]){
   // std::cout<<"player side player fd:"<<player_server_fd<<std::endl;
   //std::cout<<"player port numb:"<< player_port<<std::endl;
   send(to_master_fd,&player_port,sizeof(player_no),0);
-  send(to_master_fd,&to_master_ip,sizeof(to_master_ip),0);
+  //send(to_master_fd,&to_master_ip,sizeof(to_master_ip),0);
   std::cout<<"Connected as player "<<player_no << " out of "<<num_players<< " total players"<<std::endl;
   
   /*
@@ -66,13 +66,14 @@ int main(int argc,char*argv[]){
   int right_neighbor_server_port;
   recv(to_master_fd,&right_neighbor_server_port,sizeof(right_neighbor_server_port),0);
   recv(to_master_fd,&right_neighbor_server_ip,sizeof(right_neighbor_server_ip),0);
-
+  
   char right_port[100];
   sprintf(right_port,"%d",right_neighbor_server_port);
-  // std::cout<<"right neighbor_server_ip:"<<right_neighbor_server_ip<<std::endl;
-  // std::cout<<"right neighbor port:"<<right_port<<std::endl;
+  std::cout<<"right neighbor_server_ip:"<<right_neighbor_server_ip<<std::endl;
+  std::cout<<"right neighbor port:"<<right_port<<std::endl;
   int right_neighbor_fd = build_client(right_neighbor_server_ip,right_port);
-  int left_neighbor_fd = server_accept(player_server_fd);
+  std::string left_neighbor_ip;
+  int left_neighbor_fd = server_accept(player_server_fd,&left_neighbor_ip);
 
   //test right neighbor and left neighbor
   srand((unsigned int)time(NULL)+player_no);

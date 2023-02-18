@@ -138,12 +138,12 @@ std::string get_ip(int sock_fd){
   return ip;
 }
 
-int server_accept(int socket_fd){
+int server_accept(int socket_fd,std::string *ip){
   struct sockaddr addr;
   socklen_t addrlen = sizeof(addr);
   int client_fd = accept(socket_fd, &addr, &addrlen);
-
-
+  *ip = inet_ntoa(((struct sockaddr_in *)&addr)->sin_addr);
+  
 
   return client_fd;
 }

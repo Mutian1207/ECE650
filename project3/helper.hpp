@@ -16,6 +16,6 @@ int init_server(const char * port);
 
 int build_client(const char * hostname, const char * port);
 std::string get_ip(int sock_fd);
-int server_accept(int socket_fd);
+int server_accept(int socket_fd,std::string *ip);
 int get_port(int socket_fd);
 

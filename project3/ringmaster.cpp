@@ -30,23 +30,23 @@ int main(int argc, char *argv[]){
   //  std::cout<<"ring master socket fd:"<<master_fd<<std::endl;
   //std::cout<<"ring master port :"<<get_port(master_fd)<<std::endl;
   for(auto i =0 ;i<num_players;i++){
-    client_fd = server_accept(master_fd);
+    client_fd = server_accept(master_fd,&client_ip);
     //  ssize_t send(int sockfd, const void *buf, size_t len, int flags);
     //send player number and total player number and num_hops to client
     send(client_fd,&i,sizeof(i),0);
     send(client_fd,&num_players,sizeof(num_players),0);
     send(client_fd,&num_hops,sizeof(num_hops),0);
 
-    char player_ip[100];
+    //char player_ip[100];
     
     
     //receive player server port and ip from player (ready to go)
     recv(client_fd,&client_port,sizeof(client_port),0);
-    recv(client_fd,&player_ip,sizeof(player_ip),0);
-    std::string player_ip_store = std::string(player_ip);
+    //recv(client_fd,&player_ip,sizeof(player_ip),0);
+    //    std::string player_ip_store = *client_ip;
     //    std::cout<<"receive player ip: "<<player_ip<<" , receive player port: "<<client_port<<std::endl;
     std::vector<int> player_fd_port{i,client_fd,client_port};    
-    std::pair<std::vector<int>,std::string > newp{player_fd_port,player_ip_store};
+    std::pair<std::vector<int>,std::string > newp{player_fd_port,client_ip};
     player_all.push_back(newp);
     std::cout<<"Player "<<i<<" is ready to play"<<std::endl;
     //    std::cout<<"client fd ip:"<<player_ip<<std::endl;
