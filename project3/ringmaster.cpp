@@ -67,7 +67,7 @@ int main(int argc, char *argv[]){
     //std::cout<<"right_neighbor_server_ip:"<<right_neighbor_server_ip<<std::endl;
     //send through the right client and ringmaster server fd
     send(player_all[i].first[1],&right_neighbor_server_port,sizeof(right_neighbor_server_port),0);
-    send(player_all[i].first[1],&right_neighbor_server_ip,sizeof(right_neighbor_server_ip),0);
+    send(player_all[i].first[1],right_neighbor_server_ip,sizeof(right_neighbor_server_ip),0);
     
     }
   
