@@ -11,7 +11,10 @@ int main(int argc, char *argv[]){
   const char *port_num = argv[1];
   int num_players = atoi(argv[2]);
   int num_hops = atoi(argv[3]);
-
+  if(num_players==1){
+    std::cout<<"player number should >2 "<<std::endl;
+    exit(EXIT_FAILURE);
+    }
   std::cout<<"Potato Ringmaster"<<std::endl;
   std::cout<<"Players = "<<num_players<<std::endl;
   std::cout<<"Hops = "<< num_hops<<std::endl;
