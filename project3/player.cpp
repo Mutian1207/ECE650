@@ -65,7 +65,7 @@ int main(int argc,char*argv[]){
   char right_neighbor_server_ip[100];
   int right_neighbor_server_port;
   recv(to_master_fd,&right_neighbor_server_port,sizeof(right_neighbor_server_port),0);
-  recv(to_master_fd,&right_neighbor_server_ip,sizeof(right_neighbor_server_ip),0);
+  recv(to_master_fd,right_neighbor_server_ip,sizeof(right_neighbor_server_ip),0);
   
   char right_port[100];
   sprintf(right_port,"%d",right_neighbor_server_port);
