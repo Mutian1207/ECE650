@@ -2,7 +2,7 @@
 #include <pqxx/pqxx>
 
 #include "exerciser.h"
-
+#include"helper.h"
 using namespace std;
 using namespace pqxx;
 
@@ -30,10 +30,15 @@ int main (int argc, char *argv[])
 
   //TODO: create PLAYER, TEAM, STATE, and COLOR tables in the ACC_BBALL database
   //      load each table with rows from the provided source txt files
-
-
+  DropTable(C);
+  CreateTable(C);
+  addColor(C,"color.txt");
+  addState(C,"state.txt");
+  addTeam(C,"team.txt");
+  addPlayer(C,"player.txt");
+  
   exercise(C);
-
+  
 
   //Close database connection
   C->disconnect();
