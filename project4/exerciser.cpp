@@ -9,9 +9,9 @@
 
 void exercise(connection *C)
 {
-  //query1(C, 1, 35, 40, 0, 0, 0, 0, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-  //query2(C,"Red");
+//query1(C, 1, 35, 40, 0, 0, 0, 0, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+//query2(C,"Red");
 //query3(C,"Syracuse");
-//query4(C,"NC","DarkBlue");
-query5(C,4);
+query4(C,"NC","DarkBlue");
+//query5(C,4);
 }

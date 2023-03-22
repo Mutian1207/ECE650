@@ -90,11 +90,10 @@ void query1(connection *C,
         }
     }
     query<<";";
-    std::cout<<"query:"<<query.str()<<std::endl;
     nontransaction N(*C);
     result res(N.exec(query.str()));
     std::cout<<"PLAYER_ID TEAM_ID UNIFORM_NUM FIRST_NAME LAST_NAME MPG PPG RPG APG SPG BPG"<<std::endl;
-    for(result::iterator r=res.begin();r!=res.end();++r){
+    for(result::iterator r=res.begin();r!=res.end();r++){
         cout<<r[0].as<int>()<<" "<<r[1].as<int>()<<" "<<r[2].as<int>()<<" "
         <<r[3].as<std::string>()<<" "<<r[4].as<std::string>()<<" "<<r[5].as<int>()<<" "
         <<r[6].as<int>()<<" "<<r[7].as<int>()<<" "<<r[8].as<int>()<<" "
@@ -106,7 +105,7 @@ void query1(connection *C,
 void query2(connection *C, string team_color)
 {
     std::stringstream query;
-    query<<"SELECT TEAM.NAME FROM TEAM,COLOR WHERE TEAM.COLOR_ID = COLOR.COLOR_ID AND COLOR.NAME = "
+    query<<"SELECT TEAM.NAME FROM TEAM, COLOR WHERE TEAM.COLOR_ID = COLOR.COLOR_ID AND COLOR.NAME = "
     << "\'"<<team_color<<"\'"<<";";
     nontransaction N(*C);
     result res(N.exec(query.str()));
@@ -121,9 +120,9 @@ void query2(connection *C, string team_color)
 void query3(connection *C, string team_name)
 {
     stringstream query;
-    query<<"SELECT PLAYER.FIRST_NAME,PLAYER.LAST_NAME FROM PLAYER,TEAM\n"
-    <<"WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND TEAM.NAME = "<< "\'"<<team_name<< "\'"<<"\n"
-    <<"ORDER BY PPG DESC;";
+    query<<"SELECT PLAYER.FIRST_NAME, PLAYER.LAST_NAME FROM PLAYER, TEAM "
+    <<"WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND TEAM.NAME = "<< "\'"<<team_name<< "\'"
+    <<" ORDER BY PPG DESC;";
     
     nontransaction N(*C);
     result res(N.exec(query.str()));
@@ -138,9 +137,9 @@ void query3(connection *C, string team_name)
 void query4(connection *C, string team_state, string team_color)
 {   
     stringstream query;
-    query<<"SELECT PLAYER.UNIFORM_NUM,PLAYER.FIRST_NAME,PLAYER.LAST_NAME FROM PLAYER,TEAM,STATE,COLOR\n"
-    <<"WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND TEAM.STATE_ID = STATE.STATE_ID AND STATE.NAME = "
-    << "\'"<<team_state<< "\'"<<" AND COLOR.NAME = "<<  "\'"<<team_color<< "\'"<<";";
+    query<<"SELECT PLAYER.UNIFORM_NUM, PLAYER.FIRST_NAME, PLAYER.LAST_NAME FROM PLAYER, TEAM, STATE, COLOR "
+    <<"WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND TEAM.STATE_ID = STATE.STATE_ID AND TEAM.COLOR_ID = COLOR.COLOR_ID"
+    <<" AND STATE.NAME = " << "\'"<<team_state<< "\'"<<" AND COLOR.NAME = "<<  "\'"<<team_color<< "\'"<<";";
     nontransaction N(*C);
     result res(N.exec(query.str()));
     std::cout<<"UNIFORM_NUM FIRST_NAME LAST_NAME"<<std::endl;
@@ -154,7 +153,7 @@ void query4(connection *C, string team_state, string team_color)
 void query5(connection *C, int num_wins)
 {
     stringstream query;
-    query<<"SELECT FIRST_NAME,LAST_NAME,TEAM.NAME,TEAM.WINS FROM PLAYER,TEAM"
+    query<<"SELECT PLAYER.FIRST_NAME, PLAYER.LAST_NAME, TEAM.NAME, TEAM.WINS FROM PLAYER, TEAM"
     << " WHERE PLAYER.TEAM_ID = TEAM.TEAM_ID AND TEAM.WINS > "<< "\'"<<num_wins<< "\'"<<";";
    
     nontransaction N(*C);
